@@ -2,65 +2,26 @@ from bs4 import BeautifulSoup
 import requests
 import csv
 
-# URL of the webpage containing the table
-# URL of the webpage containing the table
-urls = [
-    "http://ufcstats.com/fight-details/a74a8c1e0a49070d",
-    "http://ufcstats.com/fight-details/ef13ed466e0b42d8",
-]
 
-with open("fight_data.csv", "w", newline="") as csv_file:
+def multiScraper (urls):
+
+    with open("fight_data.csv", "a", newline="") as csv_file:
         writer = csv.writer(csv_file)
-
-        # Write the header row
-        header_row = [
-            "Name",
-            "Knockdown",
-            "Significant_Strikes_Landed",
-            "Significant_Strikes_Attempted",
-            "Significant_Strike_%",
-            "Total_Strikes_Landed",
-            "Total_Strikes_Attempted",
-            "Takedowns_Landed",
-            "Takedowns_Attempted",
-            "Takedowns_Percent",
-            "Submission_Attempts",
-            "REV",
-            "Control_Time",
-            "Head_Landed",
-            "Head_Attempted",
-            "Body_Landed",
-            "Body_Attempted",
-            "Leg_Landed",
-            "Leg_Attempted",
-            "Distance_Landed",
-            "Distance_Attempted",
-            "Clinch_Landed",
-            "Clinch_Attempted",
-            "Ground_Landed",
-            "Ground_Attempted",
-            "Winner",
-        ]
-        writer.writerow(header_row)
 
 # Send a GET request to the URL
         for url in urls:
             response = requests.get(url)
-
-
+            print(response)
+            
             # Parse the HTML content
             soup = BeautifulSoup(response.content, "html.parser")
 
             # Find the table body element & for the Significant Strikes table
             table_body = soup.find("tbody", class_="b-fight-details__table-body")
-            page_data = soup.find_all("tr")
+            
             sig_table_body = soup.find("tbody", class_="b-fight-details__table-body")
+    
 
-            # Find all table rows within the table body
-            table_rows = table_body.find_all("tr", class_="b-fight-details__table-row")
-
-            # Find for the Significant Strikes Table
-            sig_table_row = sig_table_body.find_all("tr", class_="b-fight-details__table-row")
             # Significant Strikes
 
             head_sig_forfighter1 = soup.select_one(
@@ -69,6 +30,7 @@ with open("fight_data.csv", "w", newline="") as csv_file:
             head_sig_forfighter2 = soup.select_one(
                 "body > section > div > div > table > tbody > tr > td:nth-child(4) > p:nth-child(2)"
             ).get_text(strip=True)
+            
             body_sig_forfighter1 = soup.select_one(
                 "body > section > div > div > table > tbody > tr > td:nth-child(5) > p:nth-child(1)"
             ).get_text(strip=True)
@@ -187,3 +149,88 @@ with open("fight_data.csv", "w", newline="") as csv_file:
                 # Write the combined data to the CSV file
                 writer.writerow(fighter1data)
                 writer.writerow(fighter2data)
+            
+###############################################################################
+# Write the Header row
+with open("fight_data.csv", "w", newline="") as csv_file:
+        writer = csv.writer(csv_file)
+
+        # Write the header row
+        header_row = [
+            "Name",
+            "Knockdown",
+            "Significant_Strikes_Landed",
+            "Significant_Strikes_Attempted",
+            "Significant_Strike_%",
+            "Total_Strikes_Landed",
+            "Total_Strikes_Attempted",
+            "Takedowns_Landed",
+            "Takedowns_Attempted",
+            "Takedowns_Percent",
+            "Submission_Attempts",
+            "REV",
+            "Control_Time",
+            "Head_Landed",
+            "Head_Attempted",
+            "Body_Landed",
+            "Body_Attempted",
+            "Leg_Landed",
+            "Leg_Attempted",
+            "Distance_Landed",
+            "Distance_Attempted",
+            "Clinch_Landed",
+            "Clinch_Attempted",
+            "Ground_Landed",
+            "Ground_Attempted",
+            "Winner",
+        ]
+        writer.writerow(header_row)
+
+
+
+#Scrape the URL for each anchor text http://ufcstats.com/statistics/events/completed?page=all
+#for each URL scrape the fight details anchor tags nested in the data link = 
+# This will generate muultiple URLs that will be inserted in the array of URL
+# URL of the webpage containing the table
+
+
+event_details = [
+    "http://ufcstats.com/fight-details/838fd9d2b14e0790"
+]
+
+for event in event_details:
+    response = requests.get(event)
+
+# Parse the HTML content
+    soup = BeautifulSoup(response.content, "html.parser")
+    anchor_tags = soup.find_all("a")
+    hrefs = []
+    
+    for tag in anchor_tags:
+        if 'href' in tag.attrs:
+            href = tag['href']
+            hrefs.append(href)
+        else:
+            print("Anchor tag without href attribute:", tag)
+
+        
+    print(hrefs)
+
+    # Filter hrefs that start with the desired prefix
+    fight_details = [tag['href'] for tag in anchor_tags if tag.has_attr('href') and tag['href'].startswith("http://ufcstats.com/fight-details/")]
+
+    # fight_details = [tag['href'] for tag in anchor_tags if tag['href'].startswith("http://ufcstats.com/fight-details/")]
+
+    print(fight_details)
+    
+    
+
+    # fight_details = [
+    #     "http://ufcstats.com/fight-details/838fd9d2b14e0790",
+    #     "http://ufcstats.com/fight-details/df3cc5ec78d05a71"
+    # ]
+
+
+    
+    #multiScraper (fight_details)
+
