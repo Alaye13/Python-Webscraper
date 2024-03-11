@@ -8,7 +8,7 @@ def multiScraper (urls):
     with open("fight_data.csv", "a", newline="") as csv_file:
         writer = csv.writer(csv_file)
 
-# Send a GET request to the URL
+# Send a GET request to the URL l
         for url in urls:
             response = requests.get(url)
             print(response)
