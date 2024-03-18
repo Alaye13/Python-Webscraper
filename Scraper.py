@@ -69,7 +69,6 @@ def multiScraper (urls):
             ).get_text(strip=True)
 
 
-            # Open a CSV file in write mode
             
                 # Loop through each table row to extract data
             for row, sig_row in zip(
@@ -188,49 +187,68 @@ with open("fight_data.csv", "w", newline="") as csv_file:
 
 
 
+
+
+
+
+###############################################################################
+#This is where event details will be scraped
+
+def eventScraper(event_details): 
+    
+
+    for event in event_details:
+        response = requests.get(event)
+
+    # Parse the HTML content
+        soup = BeautifulSoup(response.content, "html.parser")
+        anchor_tags = soup.find_all("a")
+        hrefs = []
+        
+        for tag in anchor_tags:
+            if 'href' in tag.attrs:
+                href = tag['href']
+                hrefs.append(href)
+            else:
+                print("Anchor tag without href attribute:", tag)
+
+            
+
+        # Filter hrefs that start with the desired prefix
+        fight_details = [tag['href'] for tag in anchor_tags if tag.has_attr('href') and tag['href'].startswith("http://ufcstats.com/fight-details/")]
+        
+        multiScraper(fight_details)
+        
+
 #Scrape the URL for each anchor text http://ufcstats.com/statistics/events/completed?page=all
 #for each URL scrape the fight details anchor tags nested in the data link = 
 # This will generate muultiple URLs that will be inserted in the array of URL
 # URL of the webpage containing the table
-
-
+###############################################################################
 event_details = [
-    "http://ufcstats.com/fight-details/838fd9d2b14e0790"
+    "http://ufcstats.com/event-details/e4a9dbade7c7e1a7"
 ]
 
-for event in event_details:
-    response = requests.get(event)
+response = requests.get("http://ufcstats.com/statistics/events/completed?page=all")
 
-# Parse the HTML content
-    soup = BeautifulSoup(response.content, "html.parser")
-    anchor_tags = soup.find_all("a")
-    hrefs = []
-    
-    for tag in anchor_tags:
-        if 'href' in tag.attrs:
-            href = tag['href']
-            hrefs.append(href)
-        else:
-            print("Anchor tag without href attribute:", tag)
+    # Parse the HTML content
+soup = BeautifulSoup(response.content, "html.parser")
+anchor_tags = soup.find_all("a")
+hrefs = []
 
-        
-    print(hrefs)
+for tag in anchor_tags:
+    if 'href' in tag.attrs:
+        href = tag['href']
+        hrefs.append(href)
+    else:
+        print("Anchor tag without href attribute:", tag)
 
-    # Filter hrefs that start with the desired prefix
-    fight_details = [tag['href'] for tag in anchor_tags if tag.has_attr('href') and tag['href'].startswith("http://ufcstats.com/fight-details/")]
-
-    # fight_details = [tag['href'] for tag in anchor_tags if tag['href'].startswith("http://ufcstats.com/fight-details/")]
-
-    print(fight_details)
-    
     
 
-    # fight_details = [
-    #     "http://ufcstats.com/fight-details/838fd9d2b14e0790",
-    #     "http://ufcstats.com/fight-details/df3cc5ec78d05a71"
-    # ]
+# Filter hrefs that start with the desired prefix
+event_details = [tag['href'] for tag in anchor_tags if tag.has_attr('href') and tag['href'].startswith("http://ufcstats.com/event-details/")]
+
+eventScraper(event_details)
 
 
     
-    #multiScraper (fight_details)
-
