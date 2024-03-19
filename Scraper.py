@@ -87,9 +87,10 @@ def multiScraper (urls):
                 ]
                 # sig_stats = [stat.get_text(strip=True) for stat in sig_stats]
                 print(sig_stats)
+
                 # Combine the extracted data
                 fighter1data = [
-                    stats[0],  # Name
+                    stats[0],  # Name (with double quotes)
                     stats[2],  # Knockdown
                     stats[4].split()[0],  # Fighter 1 Significant Strikes Landed
                     stats[4].split()[2],  # Fighter 1 Significant Strikes Attempted
@@ -118,7 +119,7 @@ def multiScraper (urls):
                 ]
 
                 fighter2data = [
-                    stats[1],  # Name
+                    stats[1],  # Name (with double quotes)
                     stats[3],  # Knockdown
                     stats[5].split()[0],  # Fighter 1 Significant Strikes Landed
                     stats[5].split()[2],  # Fighter 1 Significant Strikes Attempted
