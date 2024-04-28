@@ -87,9 +87,22 @@ def multiScraper (urls):
                 ]
                 # sig_stats = [stat.get_text(strip=True) for stat in sig_stats]
                 print(sig_stats)
+                
+                ctrl_time_fighter1 = stats[18]
+
+                ctrl_time_fighter2 = stats[19]
+                
+                def time_to_seconds(time_str):
+                    minutes, seconds = map(int, time_str.split(':'))
+                    return minutes * 60 + seconds
+
+                ctrl_time_seconds_fighter1 = time_to_seconds(ctrl_time_fighter1)
+                ctrl_time_seconds_fighter2 = time_to_seconds(ctrl_time_fighter2)
+
+            
                 # Combine the extracted data
                 fighter1data = [
-                    stats[0],  # Name
+                    stats[0],  # Name (with double quotes)
                     stats[2],  # Knockdown
                     stats[4].split()[0],  # Fighter 1 Significant Strikes Landed
                     stats[4].split()[2],  # Fighter 1 Significant Strikes Attempted
@@ -101,7 +114,7 @@ def multiScraper (urls):
                     stats[12],  # TD %
                     stats[14],  # Submission Attempts
                     stats[16],  # REV
-                    stats[18],  # CTRL TIME
+                    ctrl_time_seconds_fighter1,  # CTRL TIME
                     head_sig_forfighter1.split()[0],
                     head_sig_forfighter1.split()[2],
                     body_sig_forfighter1.split()[0],
@@ -118,7 +131,7 @@ def multiScraper (urls):
                 ]
 
                 fighter2data = [
-                    stats[1],  # Name
+                    stats[1],  # Name (with double quotes)
                     stats[3],  # Knockdown
                     stats[5].split()[0],  # Fighter 1 Significant Strikes Landed
                     stats[5].split()[2],  # Fighter 1 Significant Strikes Attempted
@@ -130,7 +143,7 @@ def multiScraper (urls):
                     stats[13],  # TD %
                     stats[15],  # Submission Attempts
                     stats[17],  # REV
-                    stats[19],  # CTRL TIME
+                    ctrl_time_seconds_fighter2,  # CTRL TIME
                     head_sig_forfighter2.split()[0],
                     head_sig_forfighter2.split()[2],
                     body_sig_forfighter2.split()[0],
